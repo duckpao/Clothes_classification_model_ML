@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fashion Classifier</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+        }
+        .container {
+            max-width: 520px;
+            margin: 50px auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        input[type=file] {
+            width: 100%;
+            margin: 15px 0;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #1e40af;
+        }
+        .result {
+            margin-top: 25px;
+            padding: 15px;
+            background: #f1f5f9;
+            border-radius: 8px;
+        }
+        .confidence {
+            font-weight: bold;
+            color: #16a34a;
+        }
+        .image-preview {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .image-preview img {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+        }
+        ul {
+            padding-left: 18px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>👕 Fashion Classifier</h1>
+
+    <form action="/predict" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept="image/*" required>
+        <button type="submit">Predict</button>
+    </form>
+
+    {% if image_data %}
+    <div class="image-preview">
+        <h3>Uploaded Image</h3>
+        <img src="data:image/jpeg;base64,{{ image_data }}">
+    </div>
+    {% endif %}
+
+    {% if prediction %}
+    <div class="result">
+        <h3>Prediction</h3>
+        <p>
+            <strong>{{ prediction }}</strong><br>
+            Confidence: <span class="confidence">{{ confidence }}</span>
+        </p>
+
+        {% if top3 %}
+        <h4>Top 3 predictions</h4>
+        <ul>
+            {% for cls, prob in top3 %}
+            <li>{{ cls }} — {{ "%.2f"|format(prob*100) }}%</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+</body>
+</html>
